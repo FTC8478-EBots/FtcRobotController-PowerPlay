@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ebotsenums.BucketState;
 import org.firstinspires.ftc.teamcode.ebotsenums.RobotSide;
 //import org.firstinspires.ftc.teamcode.ebotssensors.EbotsWebcam;
+import org.firstinspires.ftc.teamcode.ebotssensors.EbotsImu;
 import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.ebotsutil.UtilFuncs;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.manips2021.Arm;
@@ -41,9 +42,10 @@ public class EbotsTeleOp2022 extends LinearOpMode {
     private boolean endGameRumbleIssued;
     private OpenCvCamera camera;
     private String logTag = "EBOTS";
+    private EbotsImu ebotsimu;
 
-    private DcMotorEx motor;        // the motor that controls the mecanum wheel
-    DcMotorEx motor1 = hardwareMap.get(DcMotorEx.class, "frontLeft");
+    // private DcMotorEx motor;        // the motor that controls the mecanum wheel
+   // DcMotorEx motor1 = hardwareMap.get(DcMotorEx.class, "frontLeft");
 
 
 
@@ -52,8 +54,9 @@ public class EbotsTeleOp2022 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         endGameRumbleIssued = false;
-        motor1.setPower(.25);
-
+        //motor1.setPower(.25);
+        ebotsimu = EbotsImu.getInstance(hardwareMap);
+        ebotsimu.initEbotsImu(hardwareMap);
 
 
         motionController = EbotsMotionController.get(FieldOrientedVelocityControl.class, this);
