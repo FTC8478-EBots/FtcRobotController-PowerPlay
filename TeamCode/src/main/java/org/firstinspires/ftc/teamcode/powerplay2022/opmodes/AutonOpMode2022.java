@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.StateMoveToHubX2022;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.StateOpenCVObserve;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.opencvpipelines.FreightDetector;
+import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineCenterPost;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -51,10 +52,10 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
 
         //open the camera for freight detection
         //startCamera();
-        //this.itinerary.addAll(routine.getRoutineItinerary());
+        this.itinerary.addAll(new RoutineCenterPost().getRoutineItinerary());
         //itinerary.add(StateCalibratingImu.class);
         //itinerary.add(StateConfigureRoutine.class);
-        itinerary.add(StateMoveToHubX2022.class);
+       // itinerary.add(StateMoveToHubX2022.class);
         waitForStart();
         updateTelemetry();
         // Execute the rest of the autonStates

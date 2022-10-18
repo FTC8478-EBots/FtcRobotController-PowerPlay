@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates;
+package org.firstinspires.ftc.teamcode.powerplay2022.states;
 
 import android.util.Log;
 
@@ -9,9 +9,10 @@ import org.firstinspires.ftc.teamcode.ebotsutil.AllianceSingleton;
 import org.firstinspires.ftc.teamcode.ebotsutil.FieldPosition;
 import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.DriveToEncoderTarget;
+import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.EbotsAutonState;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
 
-public class StateStrafeRight implements EbotsAutonState{
+public class StateStrafeLeft implements EbotsAutonState {
     private EbotsAutonOpMode autonOpMode;
     private Telemetry telemetry;
 
@@ -24,7 +25,7 @@ public class StateStrafeRight implements EbotsAutonState{
     private boolean firstPass = true;
     private double travelDistance = 4.0;
 
-    public StateStrafeRight(EbotsAutonOpMode autonOpMode){
+    public StateStrafeLeft(EbotsAutonOpMode autonOpMode){
         Log.d(logTag, "Entering StatePushOffWithEncoders constructor");
         this.autonOpMode = autonOpMode;
         this.telemetry = autonOpMode.telemetry;
@@ -35,7 +36,7 @@ public class StateStrafeRight implements EbotsAutonState{
         stateTimeLimit = (long) (travelDistance / maxTranslateSpeed + 2000);
         stopWatch = new StopWatch();
         int allianceSign = (AllianceSingleton.isBlue()) ? 1 : -1;
-        motionController.strafe(90 * allianceSign, targetClicks);
+        motionController.strafe(-90 * allianceSign, targetClicks);
         Log.d(logTag, "Constructor complete");
 
     }

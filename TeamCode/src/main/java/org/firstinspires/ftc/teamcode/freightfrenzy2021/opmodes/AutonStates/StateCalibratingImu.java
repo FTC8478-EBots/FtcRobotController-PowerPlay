@@ -16,13 +16,13 @@ public class StateCalibratingImu implements EbotsAutonState{
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Class Attributes
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    private DigitalChannel frontRollerTouch;
-    private DigitalChannel backRollerTouch;
+    //private DigitalChannel frontRollerTouch;
+   //private DigitalChannel backRollerTouch;
     private boolean initComplete = false;
     private EbotsAutonOpMode autonOpMode;
     private HardwareMap hardwareMap;
     private EbotsImu ebotsImu;
-    private EbotsBlinkin ebotsBlinkin;
+    //private EbotsBlinkin ebotsBlinkin;
     private boolean userRequestExit = false;
     private StopWatch stopWatchCalibration = new StopWatch();
     private boolean wasAligned = false;
@@ -37,17 +37,17 @@ public class StateCalibratingImu implements EbotsAutonState{
     public StateCalibratingImu(EbotsAutonOpMode autonOpMode){
         this.hardwareMap = autonOpMode.hardwareMap;
         this.autonOpMode = autonOpMode;
-        ebotsBlinkin = EbotsBlinkin.getInstance(hardwareMap);
+        //ebotsBlinkin = EbotsBlinkin.getInstance(hardwareMap);
         ebotsImu = EbotsImu.getInstance(hardwareMap);
         if (AllianceSingleton.isBlue()){
-            frontRollerTouch = autonOpMode.hardwareMap.get(DigitalChannel.class, "leftFrontTouch");
-            backRollerTouch = autonOpMode.hardwareMap.get(DigitalChannel.class, "leftBackTouch");
+          //  frontRollerTouch = autonOpMode.hardwareMap.get(DigitalChannel.class, "leftFrontTouch");
+            //backRollerTouch = autonOpMode.hardwareMap.get(DigitalChannel.class, "leftBackTouch");
         } else {
-            frontRollerTouch = autonOpMode.hardwareMap.get(DigitalChannel.class, "rightFrontTouch");
-            backRollerTouch = autonOpMode.hardwareMap.get(DigitalChannel.class, "rightBackTouch");
+           // frontRollerTouch = autonOpMode.hardwareMap.get(DigitalChannel.class, "rightFrontTouch");
+           // backRollerTouch = autonOpMode.hardwareMap.get(DigitalChannel.class, "rightBackTouch");
         }
 
-        ebotsBlinkin.lightsRed();
+       // ebotsBlinkin.lightsRed();
     }
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -71,7 +71,7 @@ public class StateCalibratingImu implements EbotsAutonState{
     @Override
     public void performStateActions() {
         // see if both roller wheels buttons are pressed
-        boolean isAligned = !frontRollerTouch.getState() && !backRollerTouch.getState();
+        boolean isAligned = false;//!frontRollerTouch.getState() && !backRollerTouch.getState();
         if (isAligned && !wasAligned) {
             // robot was just brought into position, reset stopWatchCalibrate
             stopWatchCalibration.reset();
@@ -83,9 +83,9 @@ public class StateCalibratingImu implements EbotsAutonState{
         }
 
         if (isAligned){
-            ebotsBlinkin.lightsYellow();
+         //   ebotsBlinkin.lightsYellow();
         } else{
-            ebotsBlinkin.lightsRed();
+           // ebotsBlinkin.lightsRed();
         }
 
         wasAligned = isAligned;
@@ -103,15 +103,15 @@ public class StateCalibratingImu implements EbotsAutonState{
             boolean cycleOn = currentCycle % 2 == 0;
             while (!autonOpMode.isStarted() && !autonOpMode.isStopRequested() && stopWatch.getElapsedTimeMillis() < duration) {
                 if (cycleOn) {
-                    ebotsBlinkin.lightsGreen();
+             //       ebotsBlinkin.lightsGreen();
                 } else {
-                    ebotsBlinkin.lightsOff();
+               //     ebotsBlinkin.lightsOff();
                 }
                 currentCycle = Math.round(stopWatch.getElapsedTimeMillis() / cycleTime);
                 cycleOn = currentCycle % 2 == 0;
             }
         }
-        ebotsBlinkin.lightsOff();
+        //ebotsBlinkin.lightsOff();
 
         autonOpMode.telemetry.addLine("Exiting " + this.getClass().getSimpleName());
         autonOpMode.telemetry.addData("InitComplete ",  initComplete);
@@ -125,7 +125,7 @@ public class StateCalibratingImu implements EbotsAutonState{
         String twoDec = "%.2f";
         telemetry.addData("Current Field Heading: ", String.format(twoDec, ebotsImu.getCurrentFieldHeadingDeg(true)));
         telemetry.addLine("Calibration Timer: " + stopWatchCalibration.toString());
-        telemetry.addData("Front Touch Sensor Pressed: ", !frontRollerTouch.getState());
-        telemetry.addData("Back Touch Sensor Pressed: ", !backRollerTouch.getState());
+        //telemetry.addData("Front Touch Sensor Pressed: ", !frontRollerTouch.getState());
+        //telemetry.addData("Back Touch Sensor Pressed: ", !backRollerTouch.getState());
     }
 }
