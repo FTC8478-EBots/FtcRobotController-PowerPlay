@@ -15,7 +15,7 @@ public interface EbotsAutonState {
         EbotsAutonState newState = null;
         try {
             newState = (EbotsAutonState) targetState.getConstructors()[0].newInstance(autonOpMode);
-        } catch (Exception e) { //todo; catch specific exceptions bad not good not great pretty bad do not do pro coder moment
+        } catch (java.lang.IllegalAccessException|java.lang.InstantiationException|java.lang.reflect.InvocationTargetException e) { //
             throw new RuntimeException("targetState not an EbotsAutonState");
         }
        return newState;

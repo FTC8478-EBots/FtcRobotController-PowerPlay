@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.AutonD
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.EbotsAutonState;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.StateCalibratingImu;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.StateConfigureRoutine;
+import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.OpenCVPipelines.ConeDetector;
 import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.StateMoveToHubX2022;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.StateOpenCVObserve;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
@@ -33,14 +34,14 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
     private OpenCvCamera camera;
     private boolean stateComplete = false;
     private boolean allStatesCompleted = false;
-
+    private ConeDetector coneDetector;
 
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize
+        coneDetector = new ConeDetector();
+        coneDetector.startCamera(hardwareMap);
         initAutonOpMode();
-
-
         Log.d(logTag, "About to start State Machine...");
         // Execute the pre-match state machine
         // Requires that the opMode is Started and the state is flagged as completed, which ensures transitional actions happen
