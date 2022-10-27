@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.powerplay2022.opmodes;
 //All of the editing was done by the Software Team.
+import android.os.Handler;
 import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ebotsenums.BucketState;
 import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.manips2021.Arm;
-
 public class TheEagleTalon {
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -22,6 +21,7 @@ public class TheEagleTalon {
     private StopWatch stopWatchDump;
     private StopWatch stopWatchInput = new StopWatch();
     private LinearOpMode opMode;
+    private boolean talonsAreClosed = false;
     private boolean dumpAchieved = false;
     //private EbotsBlinkin ebotsBlinkin;
     private static String logTag = "EBOTS";
@@ -100,6 +100,9 @@ public class TheEagleTalon {
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Instance Methods
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    public boolean isClosed(){
+        return(talonsAreClosed);
+    }
     public void init(LinearOpMode opMode){
         this.opMode = opMode;
         leftTalon = opMode.hardwareMap.get(Servo.class,"rightTalon");
@@ -132,9 +135,21 @@ public class TheEagleTalon {
             //setPos(getDumpPositionWithVibrate());
         if(gamepad.right_bumper) {
             setPos(1);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    talonsAreClosed = true;
+                }
+            }, 1000);
         }
-        else if(gamepad.left_bumper){
+        else if(gamepad.left_bumper) {
             setPos(0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    talonsAreClosed = false;
+                }
+            }, 1000);
         }
         //} else if (bucketState == BucketState.DUMP) {
             toggleState();
