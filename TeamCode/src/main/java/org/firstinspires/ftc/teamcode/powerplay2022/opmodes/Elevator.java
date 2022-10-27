@@ -8,11 +8,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ebotsenums.BucketState;
 import org.firstinspires.ftc.teamcode.ebotssensors.EbotsBlinkin;
 import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.manips2021.Bucket;
+import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.FieldOrientedVelocityControl;
 
 public class Elevator {
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,9 +42,9 @@ public class Elevator {
 
     public enum Level{
         ONE(0),
-        TWO(625),
-        THREE(1235),
-        FOUR(1845);
+        TWO(-550),
+        THREE(-950),
+        FOUR(-1300);
 
         private int encoderPosition;
 
@@ -193,7 +195,11 @@ public class Elevator {
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Instance Methods
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    private void updateTelemetry() {
+        telemetry.addData("Elevator Position", armMotor.getCurrentPosition());
+    }
     public void init(LinearOpMode opMode){
+        telemetry = opMode.telemetry;
         Log.d(logTag, "Inside Arm::init...");
         this.opMode = opMode;
         this.hardwareMap = this.opMode.hardwareMap;
@@ -368,8 +374,8 @@ public class Elevator {
     }
 
     public void handleUserInput(Gamepad gamepad) {
+        updateTelemetry();
         if (stopWatchInput.getElapsedTimeMillis() < 500) return;
-
         if(gamepad.left_bumper && gamepad.right_stick_button){
             Log.d(logTag, "Captured input to zeroArmHeight");
             zeroArmHeight();
@@ -383,9 +389,13 @@ public class Elevator {
         } else if (gamepad.triangle){
             moveToLevel(Level.THREE);
             stopWatchInput.reset();
-        }else if (gamepad.circle){
+        }else if (gamepad.circle) {
             moveToLevel(Level.FOUR);
             stopWatchInput.reset();
+        }else if (gamepad.dpad_down) {
+            armMotor.setPower(0);
+        }else if (gamepad.dpad_up) {
+            armMotor.setPower(0.5);
         }
 
     }

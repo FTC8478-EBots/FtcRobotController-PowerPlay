@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.opencvpipelines.
 public class EbotsTeleOp2022 extends LinearOpMode {
 
     private Elevator elevator;
+    private TheEagleTalon theEagleTalon;
 
     private EbotsMotionController motionController;
     private StopWatch lockoutStopWatch = new StopWatch();
@@ -45,11 +46,13 @@ public class EbotsTeleOp2022 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         endGameRumbleIssued = false;
         elevator = Elevator.getInstance(this);
+        theEagleTalon = TheEagleTalon.getInstance(this);
         //motor1.setPower(.25);
         ebotsimu = EbotsImu.getInstance(hardwareMap);
         ebotsimu.initEbotsImu(hardwareMap);
         //UtilFuncs.initManips(elevator,null,this);
         elevator.init(this);
+        theEagleTalon.init(this);
 
 
         motionController = EbotsMotionController.get(FieldOrientedVelocityControl.class, this);
@@ -76,6 +79,7 @@ public class EbotsTeleOp2022 extends LinearOpMode {
             this.handleUserInput(gamepad1);
             motionController.handleUserInput(gamepad1);
             elevator.handleUserInput(gamepad2);
+            theEagleTalon.handleUserInput(gamepad2);
 
 
             updateTelemetry();

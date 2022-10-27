@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.powerplay2022.opmodes;
-//all of the editing done by Sean
+//All of the editing was done by the Software Team.
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.teamcode.ebotsenums.BucketState;
 import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.manips2021.Arm;
@@ -43,7 +42,7 @@ public class TheEagleTalon {
         Getters & Setters
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     public void setPos(double servoPos){
-        leftTalon.setPosition(servoPos);
+        leftTalon.setPosition(1-servoPos);
         rightTalon.setPosition(servoPos); //Sean did this
     }
 
@@ -75,7 +74,7 @@ public class TheEagleTalon {
         //    } else {
        //         bucketState = BucketState.COLLECT;
             //}
-            setPos(BucketState.COLLECT.getServoSetting());
+            //setPos(BucketState.COLLECT.getServoSetting());
    //     }
     }
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -130,7 +129,7 @@ public class TheEagleTalon {
 
             }
             // the target position varies in time to shake freight out
-            setPos(getDumpPositionWithVibrate());
+            //setPos(getDumpPositionWithVibrate());
         if(gamepad.right_bumper) {
             setPos(1);
         }
@@ -144,8 +143,6 @@ public class TheEagleTalon {
 
     private void toggleState(){
        // ebotsBlinkin = EbotsBlinkin.getInstance(opMode.hardwareMap);
-        Arm arm = Arm.getInstance(opMode);
-
         //if (bucketState == BucketState.COLLECT){
             // if bucket at Collect, move to Travel
           //  bucketState = BucketState.TRAVEL;
@@ -161,8 +158,6 @@ public class TheEagleTalon {
             Log.d("EBOTS", "Bucket tilt to Collect DENIED!!!");
         //} else if (bucketState == BucketState.DUMP && dumpAchieved){
             // if state was DUMP and dump achieved them return arm to level 1
-            arm.setFlagToRotateAtBottom();
-            arm.moveToLevel(Arm.Level.ONE);
           //  bucketState = BucketState.TRAVEL;
         //} else {
             // otherwise set the bucket state to TRAVEL

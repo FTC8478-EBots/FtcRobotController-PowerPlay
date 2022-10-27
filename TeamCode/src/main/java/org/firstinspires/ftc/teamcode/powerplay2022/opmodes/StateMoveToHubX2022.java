@@ -18,6 +18,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 public class StateMoveToHubX2022 implements EbotsAutonState {
 
     StopWatch stopWatch = new StopWatch();
+
     EbotsAutonOpMode autonOpMode;
 
     private String name = this.getClass().getSimpleName();
