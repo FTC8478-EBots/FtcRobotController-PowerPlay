@@ -30,8 +30,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @TeleOp
 public class EbotsTeleOpV2 extends LinearOpMode {
-
     private EbotsMotionController motionController;
+
     private StopWatch lockoutStopWatch = new StopWatch();
     private StopWatch endGameStopWatch = new StopWatch();
     private Telemetry.Item zeroHeadingItem = null;

@@ -11,28 +11,22 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-//import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.ebotsenums.BucketState;
 import org.firstinspires.ftc.teamcode.ebotsenums.RobotSide;
-//import org.firstinspires.ftc.teamcode.ebotssensors.EbotsWebcam;
 import org.firstinspires.ftc.teamcode.ebotssensors.EbotsImu;
 import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.ebotsutil.UtilFuncs;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.manips2021.Arm;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.manips2021.Bucket;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.manips2021.Carousel;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.manips2021.Intake;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.EbotsMotionController;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.FieldOrientedDrive;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.FieldOrientedVelocityControl;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.MecanumDrive;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.opencvpipelines.FreightDetector;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @TeleOp
 public class EbotsTeleOp2022 extends LinearOpMode {
+
+    private Elevator elevator;
 
     private EbotsMotionController motionController;
     private StopWatch lockoutStopWatch = new StopWatch();
@@ -40,12 +34,8 @@ public class EbotsTeleOp2022 extends LinearOpMode {
     private Telemetry.Item zeroHeadingItem = null;
 
     private boolean endGameRumbleIssued;
-    private OpenCvCamera camera;
     private String logTag = "EBOTS";
     private EbotsImu ebotsimu;
-
-    // private DcMotorEx motor;        // the motor that controls the mecanum wheel
-   // DcMotorEx motor1 = hardwareMap.get(DcMotorEx.class, "frontLeft");
 
 
 
@@ -54,13 +44,15 @@ public class EbotsTeleOp2022 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         endGameRumbleIssued = false;
+        elevator = Elevator.getInstance(this);
         //motor1.setPower(.25);
         ebotsimu = EbotsImu.getInstance(hardwareMap);
         ebotsimu.initEbotsImu(hardwareMap);
+        //UtilFuncs.initManips(elevator,null,this);
+        elevator.init(this);
 
 
         motionController = EbotsMotionController.get(FieldOrientedVelocityControl.class, this);
-        //EbotsWebcam bucketWebCam = new EbotsWebcam(hardwareMap, "bucketCam", RobotSide.FRONT, 0,-3.25f, 9.0f);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         Log.d(logTag, "cameraMonitorViewId set");
@@ -83,6 +75,7 @@ public class EbotsTeleOp2022 extends LinearOpMode {
             rumbleIfEndGame();
             this.handleUserInput(gamepad1);
             motionController.handleUserInput(gamepad1);
+            elevator.handleUserInput(gamepad2);
 
 
             updateTelemetry();
@@ -134,4 +127,3 @@ public class EbotsTeleOp2022 extends LinearOpMode {
 
     }
 }
-
