@@ -42,11 +42,11 @@ public class Elevator {
 
     public enum Level {
         ONE(0),
-        CONE_1(0),
-        CONE_2(-100),
-        CONE_3(-200),
-        CONE_4(-300),
-        CONE_5(-400),
+        //CONE_1(0),
+        CONE_2(-50),
+        CONE_3(-100),
+        CONE_4(-147),
+        CONE_5(-195),
         ONE_FIVE(-100),
         TWO(-550),
         THREE(-950),
@@ -280,7 +280,7 @@ public class Elevator {
         boolean exitRequested = opModeExitRequested(duringInit);
 
         while (!isAtBottom() && !isTimedOut && !exitRequested) {
-            armMotor.setPower(-0.25);
+            armMotor.setPower(-1);
             isTimedOut = stopWatchZero.getElapsedTimeMillis() >= timeLimit;
         }
         if (isTimedOut) Log.d(logTag, "Exited movement because timed out");
@@ -419,14 +419,17 @@ public class Elevator {
             stopWatchInput.reset();
         } else if (gamepad.dpad_left) {
             armMotor.setPower(0);
+            stopWatchInput.reset();
         } else if (gamepad.dpad_right) {
             armMotor.setPower(1);
+            stopWatchInput.reset();
         } else if (gamepad.dpad_up) {
             moveToLevel(targetLevel.next());
+            stopWatchInput.reset();
         } else if (gamepad.dpad_down) {
             moveToLevel(targetLevel.prev());
-        }
-        if (targetLevel == Level.ONE & theEagleTalon.isClosed()) {
+            stopWatchInput.reset();
+        } else if (targetLevel == Level.ONE & theEagleTalon.isClosed()) {
             moveToLevel(Level.ONE_FIVE);
         }else if (targetLevel == Level.ONE_FIVE & !theEagleTalon.isClosed()){
             moveToLevel(Level.ONE);
