@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.Stat
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.autonroutines.EbotsAutonRoutine;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateMoveBackward;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateMoveForward;
+import org.firstinspires.ftc.teamcode.powerplay2022.states.StateMoveForwardWithVelocityControl;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateStrafeLeft;
 
 public class RoutineCenterPost extends EbotsAutonRoutine {
@@ -20,12 +21,13 @@ public class RoutineCenterPost extends EbotsAutonRoutine {
     Constructors
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     public RoutineCenterPost(){
-
-        itinerary.add(StateStrafeRight.class);
         itinerary.add(StateMoveForward.class);
+        //itinerary.add(StateMoveForwardWithVelocityControl.class);
+        //Back left motor is the problem
+        itinerary.add(StateStrafeRight.class);
         //////////////////////////////////////itinerary.add(StateMoveToHubY.class);
-        itinerary.add(StateStrafeLeft.class);
-        itinerary.add(StateMoveBackward.class);
+      //  itinerary.add(StateStrafeLeft.class);
+        //itinerary.add(StateMoveBackward.class);
     }
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Getters & Setters

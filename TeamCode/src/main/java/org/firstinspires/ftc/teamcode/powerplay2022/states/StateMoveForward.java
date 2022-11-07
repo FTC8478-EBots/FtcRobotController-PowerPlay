@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.DriveToEncoderTarget;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.EbotsAutonState;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
+import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.Elevator;
 
 public class StateMoveForward implements EbotsAutonState {
     private EbotsAutonOpMode autonOpMode;
@@ -24,19 +25,21 @@ public class StateMoveForward implements EbotsAutonState {
     private String logTag = "EBOTS";
     private boolean firstPass = true;
     private double travelDistance = 4.0;
-
+    private double clicksPerSquare = 849;
     public StateMoveForward(EbotsAutonOpMode autonOpMode){
         Log.d(logTag, "Entering StatePushOffWithEncoders constructor");
         this.autonOpMode = autonOpMode;
         this.telemetry = autonOpMode.telemetry;
         motionController = new DriveToEncoderTarget(autonOpMode);
-
-        targetClicks = AllianceSingleton.isBlue() ? Math.toIntExact(Math.round(1200/Math.sqrt(2))) : Math.toIntExact(Math.round(1200/Math.sqrt(2)));
-        double maxTranslateSpeed = Speed.FAST.getMeasuredTranslateSpeed();
+        double numSquares = 2.6;
+        targetClicks = -(int) (clicksPerSquare * numSquares);
+        double maxTranslateSpeed = Speed.SLOW.getMeasuredTranslateSpeed();
         stateTimeLimit = (long) (travelDistance / maxTranslateSpeed + 2000);
         stopWatch = new StopWatch();
         int allianceSign = (AllianceSingleton.isBlue()) ? 1 : -1;
         motionController.setEncoderTarget(targetClicks);
+        Elevator elevator =  Elevator.getInstance(autonOpMode);
+        elevator.moveToLevel(Elevator.Level.FOUR);
         Log.d(logTag, "Constructor complete");
 
     }

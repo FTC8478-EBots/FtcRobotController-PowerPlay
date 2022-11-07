@@ -20,11 +20,12 @@ import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.Stat
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.opencvpipelines.FreightDetector;
 import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineCenterPost;
+import org.firstinspires.ftc.teamcode.powerplay2022.states.StateCloseTalon;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous
+@Autonomous(preselectTeleOp = "EbotsTeleOp2022")
 public class AutonOpMode2022 extends EbotsAutonOpMode {
 
     String logTag = "EBOTS";
@@ -39,8 +40,8 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize
-        coneDetector = new ConeDetector();
-        coneDetector.startCamera(hardwareMap);
+       // coneDetector = new ConeDetector();
+      //  coneDetector.startCamera(hardwareMap);
         initAutonOpMode();
         Log.d(logTag, "About to start State Machine...");
         // Execute the pre-match state machine
@@ -107,13 +108,13 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
 
         // Setup the pre-match autonStates
         //itinerary.add(StateConfigureRoutine.class);
-        itinerary.add(StateCalibratingImu.class);
+        //itinerary.add(StateCalibratingImu.class);
         //itinerary.add(StateOpenCVObserve.class);
 
 //        itinerary.add(StateCollectFreightWithVelocityControl.class);
 //        itinerary.add(StateUndoCollectTravelWithVelocityControl.class);
 //        itinerary.add(StateDelayTenSeconds.class);
-
+        itinerary.add(StateCloseTalon.class);
         telemetry.addLine("Initialization complete!");
         telemetry.update();
     }
