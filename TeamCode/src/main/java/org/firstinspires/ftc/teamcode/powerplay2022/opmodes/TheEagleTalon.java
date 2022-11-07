@@ -135,7 +135,7 @@ public class TheEagleTalon {
             // the target position varies in time to shake freight out
             //setPos(getDumpPositionWithVibrate());
         if(gamepad.right_bumper) {
-            setPos(0);  //Sean changed this :D and line 147
+            setPos(0);  //
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -157,6 +157,11 @@ public class TheEagleTalon {
             toggleState();
         //}
     }
+
+    public void graspTalon(){
+        setPos(0);
+    }
+    //Closes Talon
 
     private void toggleState(){
        // ebotsBlinkin = EbotsBlinkin.getInstance(opMode.hardwareMap);

@@ -27,7 +27,7 @@ public class DriveToEncoderTarget implements EbotsMotionController{
 
     private int encoderTarget;
     private int allowableErrorInClicks = 30;
-    private double speed = 0.5;
+    private double speed = 0.3;
 
 
     public DriveToEncoderTarget(EbotsAutonOpMode autonOpMode){
