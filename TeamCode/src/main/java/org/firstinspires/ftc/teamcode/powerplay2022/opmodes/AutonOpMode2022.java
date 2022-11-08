@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.powerplay2022.opmodes;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
+import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutinePark;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.ebotsenums.BucketState;
 import org.firstinspires.ftc.teamcode.ebotsenums.RobotSide;
@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.opencvpipelines.FreightDetector;
 import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineCenterPost;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateCloseTalon;
+import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -40,8 +41,8 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize
-       // coneDetector = new ConeDetector();
-      //  coneDetector.startCamera(hardwareMap);
+        coneDetector = new ConeDetector();
+        coneDetector.startCamera(hardwareMap);
         initAutonOpMode();
         Log.d(logTag, "About to start State Machine...");
         // Execute the pre-match state machine
@@ -51,13 +52,14 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
             transitionToNextState();
             executeStateMachine();
         }
-
-        //open the camera for freight detection
-        //startCamera();
-        this.itinerary.addAll(new RoutineCenterPost().getRoutineItinerary());
+        this.itinerary.addAll(new RoutinePark(coneDetector.getParkingSpace()).getRoutineItinerary());//Somehow got this(;))))
+        //this.itinerary.addAll(new RoutineCenterPost().getRoutineItinerary());
         //itinerary.add(StateCalibratingImu.class);
         //itinerary.add(StateConfigureRoutine.class);
-       // itinerary.add(StateMoveToHubX2022.class);
+        //while (true & ! isStarted()) {//Sean's code XD
+            telemetry.addData("Parking Space",coneDetector.getParkingSpace());
+            telemetry.update();
+       // }
         waitForStart();
         updateTelemetry();
         // Execute the rest of the autonStates

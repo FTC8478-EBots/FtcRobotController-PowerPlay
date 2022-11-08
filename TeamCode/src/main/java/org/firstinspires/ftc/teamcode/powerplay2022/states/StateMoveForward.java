@@ -39,7 +39,7 @@ public class StateMoveForward implements EbotsAutonState {
         int allianceSign = (AllianceSingleton.isBlue()) ? 1 : -1;
         motionController.setEncoderTarget(targetClicks);
         Elevator elevator =  Elevator.getInstance(autonOpMode);
-        elevator.moveToLevel(Elevator.Level.FOUR);
+        elevator.moveToLevel(Elevator.Level.ONE_FIVE);
         Log.d(logTag, "Constructor complete");
 
     }
