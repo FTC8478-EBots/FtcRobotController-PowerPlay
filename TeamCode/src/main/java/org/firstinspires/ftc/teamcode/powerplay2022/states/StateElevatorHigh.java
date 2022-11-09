@@ -1,12 +1,7 @@
 package org.firstinspires.ftc.teamcode.powerplay2022.states;
-
 import android.util.Log;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.ebotsenums.Speed;
-import org.firstinspires.ftc.teamcode.ebotssensors.EbotsImu;
-import org.firstinspires.ftc.teamcode.ebotsutil.AllianceSingleton;
-import org.firstinspires.ftc.teamcode.ebotsutil.FieldPosition;
 import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.DriveToEncoderTarget;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.EbotsAutonState;
@@ -14,7 +9,7 @@ import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode
 import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.Elevator;
 import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.TheEagleTalon;
 
-public class StateCloseTalon implements EbotsAutonState {
+public class StateElevatorHigh implements EbotsAutonState {
     private EbotsAutonOpMode autonOpMode;
     private Telemetry telemetry;
 
@@ -24,25 +19,23 @@ public class StateCloseTalon implements EbotsAutonState {
     private DriveToEncoderTarget motionController;
 
     private String logTag = "EBOTS";
-    private TheEagleTalon theEagleTalon;
     private boolean firstPass = true;
     private double travelDistance = 4.0;
     private double clicksPerSquare = 849;
-    public StateCloseTalon(EbotsAutonOpMode autonOpMode){
+    private Elevator elevator;
+    public StateElevatorHigh(EbotsAutonOpMode autonOpMode){
         Log.d(logTag, "Entering StatePushOffWithEncoders constructor");
         this.autonOpMode = autonOpMode;
         this.telemetry = autonOpMode.telemetry;
-        motionController = new DriveToEncoderTarget(autonOpMode);
         Log.d(logTag, "Constructor complete");
-        theEagleTalon = TheEagleTalon.getInstance(autonOpMode);
-        theEagleTalon.graspTalon();
+        elevator = Elevator.getInstance(autonOpMode);
+        elevator.moveToLevel(Elevator.Level.FOUR);
     }
 
 
     @Override
     public boolean shouldExit() {
-      return theEagleTalon.isClosed();
-      //  return true;
+        return elevator.isAtTargetLevel();
     }
 
     @Override

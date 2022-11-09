@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -28,6 +29,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+@Disabled
 @TeleOp
 public class EbotsTeleOpV2 extends LinearOpMode {
     private EbotsMotionController motionController;

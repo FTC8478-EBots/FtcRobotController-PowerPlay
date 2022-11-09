@@ -135,23 +135,10 @@ public class TheEagleTalon {
             // the target position varies in time to shake freight out
             //setPos(getDumpPositionWithVibrate());
         if(gamepad.right_bumper) {
-            setPos(0);  //
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    talonsAreClosed = true;
-                }
-            }, 300);
+            graspTalon();
         }
         else if(gamepad.left_bumper) {
-            setPos(1);
-            //Change states of talonsAreClosed after specified time
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    talonsAreClosed = false;
-                }
-            }, 300);
+            releaseTalon();
         }
         //} else if (bucketState == BucketState.DUMP) {
             toggleState();
@@ -159,10 +146,26 @@ public class TheEagleTalon {
     }
 
     public void graspTalon(){
-        setPos(0);
+        setPos(0);  //
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                talonsAreClosed = true;
+            }
+        }, 300);
     }
     //Closes Talon
-
+    public void releaseTalon() {
+        setPos(1);
+        //Change states of talonsAreClosed after specified time
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                talonsAreClosed = false;
+            }
+        }, 300);
+    }
+    //Open Talon
     private void toggleState(){
        // ebotsBlinkin = EbotsBlinkin.getInstance(opMode.hardwareMap);
         //if (bucketState == BucketState.COLLECT){

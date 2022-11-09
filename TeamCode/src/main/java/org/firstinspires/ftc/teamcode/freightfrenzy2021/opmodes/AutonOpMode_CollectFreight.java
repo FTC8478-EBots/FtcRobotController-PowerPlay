@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.ebotsenums.BucketState;
 import org.firstinspires.ftc.teamcode.ebotsenums.RobotSide;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.Stat
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.StateRotateToCollect;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.navigators.NavigatorVuforia;
 
+@Disabled
 @Autonomous
 public class AutonOpMode_CollectFreight extends EbotsAutonOpMode {
 

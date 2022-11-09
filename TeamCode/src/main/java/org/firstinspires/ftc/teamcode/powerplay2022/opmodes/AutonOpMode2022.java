@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutinePark;
+import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineBlueLeft;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.ebotsenums.BucketState;
 import org.firstinspires.ftc.teamcode.ebotsenums.RobotSide;
@@ -21,6 +22,8 @@ import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.opencvpipelines.FreightDetector;
 import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineCenterPost;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateCloseTalon;
+import org.firstinspires.ftc.teamcode.powerplay2022.states.StateMoveForward;
+import org.firstinspires.ftc.teamcode.powerplay2022.states.StateMoveForwardWithVelocityControl;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -52,11 +55,14 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
             transitionToNextState();
             executeStateMachine();
         }
-        this.itinerary.addAll(new RoutinePark(coneDetector.getParkingSpace()).getRoutineItinerary());//Somehow got this(;))))
+        //this.itinerary.add(StateMoveForward.class);
+        //this.itinerary.addAll(new RoutinePark(coneDetector.getParkingSpace()).getRoutineItinerary());//Somehow got this(;))))
+        this.itinerary.addAll(new RoutineBlueLeft(coneDetector.getParkingSpace()).getRoutineItinerary());
+      //  this.itinerary.addAll(new RoutinePark(coneDetector.getParkingSpace()).getRoutineItinerary());//Somehow got this(;))))
         //this.itinerary.addAll(new RoutineCenterPost().getRoutineItinerary());
         //itinerary.add(StateCalibratingImu.class);
         //itinerary.add(StateConfigureRoutine.class);
-        //while (true & ! isStarted()) {//Sean's code XD
+        //while (true & ! isStarted()) {
             telemetry.addData("Parking Space",coneDetector.getParkingSpace());
             telemetry.update();
        // }

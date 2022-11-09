@@ -32,7 +32,7 @@ public class StateMoveForward implements EbotsAutonState {
         this.telemetry = autonOpMode.telemetry;
         motionController = new DriveToEncoderTarget(autonOpMode);
         double numSquares = 2.6;
-        targetClicks = -(int) (clicksPerSquare * numSquares);
+        targetClicks = (int) (-clicksPerSquare * numSquares);
         double maxTranslateSpeed = Speed.SLOW.getMeasuredTranslateSpeed();
         stateTimeLimit = (long) (travelDistance / maxTranslateSpeed + 2000);
         stopWatch = new StopWatch();

@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.powerplay2022.opmodes;
-//Sean's baby no1
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,12 +8,8 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.ebotsenums.BucketState;
-import org.firstinspires.ftc.teamcode.ebotssensors.EbotsBlinkin;
+
 import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.manips2021.Bucket;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.FieldOrientedVelocityControl;
 
 public class Elevator {
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -24,13 +19,13 @@ public class Elevator {
     Instance Attributes
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     private TheEagleTalon theEagleTalon;
-    private DcMotorEx armMotor;
+    private DcMotorEx elevatorMotor;
     private DigitalChannel zeroLimitSwitch;
     private boolean isZeroed = false;
     private StopWatch stopWatchInput = new StopWatch();
     private boolean wasAtLevelOne = false;
     private boolean isAtLevelOne = false;
-    private static Elevator armInstance = null;
+    private static Elevator elevatorInstance = null;
     private Level targetLevel;
     HardwareMap hardwareMap;
     private boolean rotateToCollectWhenReturnToBottom = false;
@@ -43,14 +38,14 @@ public class Elevator {
     public enum Level {
         ONE(0),
         //CONE_1(0),
-        CONE_2(-50),
-        CONE_3(-100),
-        CONE_4(-147),
-        CONE_5(-195),
-        ONE_FIVE(-100),
-        TWO(-550),
-        THREE(-950),
-        FOUR(-1300);
+        CONE_2(50),
+        CONE_3(100),
+        CONE_4(147),
+        CONE_5(195),
+        ONE_FIVE(100),
+        TWO(550),
+        THREE(950),
+        FOUR(1300);
 
         private int encoderPosition;
 
@@ -102,15 +97,15 @@ public class Elevator {
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
     public double getSpeed() {
-        return armMotor.getPower();
+        return elevatorMotor.getPower();
     }
 
     public boolean isAtBottom() {
-        return true;//!zeroLimitSwitch.getState();
+        return zeroLimitSwitch.getState();
     }
 
     public int getPosition() {
-        return armMotor.getCurrentPosition();
+        return elevatorMotor.getCurrentPosition();
     }
 
     public boolean isInitialized() {
@@ -132,7 +127,7 @@ public class Elevator {
 
     private void setTargetLevel(Level level) {
         int targetPosition = level.getEncoderPosition();
-        int currentPosition = armMotor.getCurrentPosition();
+        int currentPosition = elevatorMotor.getCurrentPosition();
 
         boolean travelingDown = (targetPosition < currentPosition);
         double targetPower = 1;
@@ -143,10 +138,10 @@ public class Elevator {
             armState = ArmState.MOVING_UP;
         }
 
-        armMotor.setTargetPosition(targetPosition);
-        armMotor.setPower(targetPower);
+        elevatorMotor.setTargetPosition(targetPosition);
+        elevatorMotor.setPower(targetPower);
         targetLevel = level;
-        armMotor.setTargetPosition(level.getEncoderPosition());
+        elevatorMotor.setTargetPosition(level.getEncoderPosition());
     }
 
     public boolean shouldBucketCollect() {
@@ -167,7 +162,7 @@ public class Elevator {
 
     public boolean isAtTargetLevel() {
         boolean verdict = false;
-        int error = armMotor.getTargetPosition() - armMotor.getCurrentPosition();
+        int error = elevatorMotor.getTargetPosition() - elevatorMotor.getCurrentPosition();
         if (Math.abs(error) <= 5) {
             verdict = true;
         }
@@ -199,19 +194,19 @@ public class Elevator {
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     //Return the instance if not present
     public static Elevator getInstance(LinearOpMode opMode) {
-        if (armInstance == null) {
+        if (elevatorInstance == null) {
             Log.d(logTag, "Arm::getInstance --> Arm is null, about to create a new instance...");
-            armInstance = new Elevator(opMode);
+            elevatorInstance = new Elevator(opMode);
             Log.d(logTag, "Arm::getInstance --> New arm created");
 
-        } else if (armInstance.getOpMode() != opMode) {
+        } else if (elevatorInstance.getOpMode() != opMode) {
             Log.d(logTag, "Arm::getInstance --> opMode is stale, about to create a new instance...");
-            armInstance = new Elevator(opMode);
+            elevatorInstance = new Elevator(opMode);
             Log.d(logTag, "Arm::getInstance --> New arm instance created because opMode didn't match");
         } else {
             Log.d(logTag, "Arm::getInstance --> Existing instance of arm provided");
         }
-        return armInstance;
+        return elevatorInstance;
     }
 
 
@@ -219,9 +214,9 @@ public class Elevator {
     Instance Methods
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     private void updateTelemetry() {
-        telemetry.addData("Elevator Position", armMotor.getCurrentPosition());
+        telemetry.addData("Elevator Position", elevatorMotor.getCurrentPosition());
+        telemetry.addData("ZeroSensor", zeroLimitSwitch.getState());
     }
-
     public void init(LinearOpMode opMode) {
         telemetry = opMode.telemetry;
         Log.d(logTag, "Inside Arm::init...");
@@ -229,17 +224,18 @@ public class Elevator {
         theEagleTalon = TheEagleTalon.getInstance(opMode);
         this.hardwareMap = this.opMode.hardwareMap;
         isZeroed = false;
-        this.armMotor = this.hardwareMap.get(DcMotorEx.class, "elevatorMotor");
-        //this.zeroLimitSwitch = this.hardwareMap.get(DigitalChannel.class, "zeroLimitSwitch");
-
+        this.elevatorMotor = this.hardwareMap.get(DcMotorEx.class, "elevatorMotor");
+        this.zeroLimitSwitch = this.hardwareMap.get(DigitalChannel.class, "elevatorZero");
+        updateTelemetry();
+        telemetry.update();
         if (!isAtBottom()) {
             Log.d(logTag, "Limit switch was not engaged, preparing to move are to zeroArmHeight");
-            zeroArmHeight();
+            zeroElevatorHeight();
         } else {
             Log.d(logTag, "Limit switch was already engaged, about to performZeroActions...");
             performZeroActions();
         }
-        armMotor.setTargetPosition(0);
+        elevatorMotor.setTargetPosition(0);
 
         if (isAtBottom()) armState = ArmState.INITIALIZED;
 
@@ -252,7 +248,7 @@ public class Elevator {
         //****************************************
     }
 
-    public void zeroArmHeight() {
+    public void zeroElevatorHeight() {
         Log.d(logTag, "Entering zeroArmHeight");
 
         isZeroed = false;
@@ -262,15 +258,15 @@ public class Elevator {
             return;
         }
 
-        Log.d(logTag, "Preparing to rotate bucket to travel position...");
-        rotateBucketToTravelPosition();
+        //Log.d(logTag, "Preparing to rotate bucket to travel position...");
+        //rotateBucketToTravelPosition();
 
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         Log.d(logTag, "Preparing to move arm...");
         StopWatch stopWatchZero = new StopWatch();
-        long timeLimit = 600;
+        long timeLimit = 1600;
         boolean isTimedOut = stopWatchZero.getElapsedTimeMillis() >= timeLimit;
 
         // the flags used to determine if the bucket needs to rotate must be managed relative to whether this is during init
@@ -280,33 +276,33 @@ public class Elevator {
         boolean exitRequested = opModeExitRequested(duringInit);
 
         while (!isAtBottom() && !isTimedOut && !exitRequested) {
-            armMotor.setPower(-1);
+            elevatorMotor.setPower(-.4);
             isTimedOut = stopWatchZero.getElapsedTimeMillis() >= timeLimit;
         }
         if (isTimedOut) Log.d(logTag, "Exited movement because timed out");
         if (isAtBottom()) Log.d(logTag, "Exited movement because reached bottom");
         if (exitRequested) Log.d(logTag, "Exited because opMode requested exit");
         // stop the motor
-        armMotor.setPower(0.0);
+        elevatorMotor.setPower(0.0);
 
         if (isAtBottom()) {
             performZeroActions();
         } else {
             Log.d(logTag, "!!! Zero operation NOT successful !!!");
-            int currentPosition = armMotor.getCurrentPosition();
-            armMotor.setTargetPosition(currentPosition);
-            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            int currentPosition = elevatorMotor.getCurrentPosition();
+            elevatorMotor.setTargetPosition(currentPosition);
+            elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         }
     }
 
     private void performZeroActions() {
         Log.d(logTag, "Entering Arm::performZeroActions...");
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setTargetPosition(0);
+        elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elevatorMotor.setTargetPosition(0);
         isZeroed = true;
         opMode.gamepad2.rumble(350);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         armState = ArmState.AT_LEVEL_1;
         targetLevel = Level.ONE;
@@ -375,7 +371,7 @@ public class Elevator {
         //Bucket bucket = Bucket.(opMode);
 
         int targetPosition = level.getEncoderPosition();
-        int currentPosition = armMotor.getCurrentPosition();
+        int currentPosition = elevatorMotor.getCurrentPosition();
 
 
         //boolean bucketInTravelPosition = bucket.getBucketState() == BucketState.TRAVEL;
@@ -403,7 +399,7 @@ public class Elevator {
         if (stopWatchInput.getElapsedTimeMillis() < 500) return;
         if (gamepad.left_bumper && gamepad.right_stick_button) {
             Log.d(logTag, "Captured input to zeroArmHeight");
-            zeroArmHeight();
+            zeroElevatorHeight();
             stopWatchInput.reset();
         } else if (gamepad.square) {
             moveToLevel(Level.TWO);
@@ -418,10 +414,10 @@ public class Elevator {
             moveToLevel(Level.FOUR);
             stopWatchInput.reset();
         } else if (gamepad.dpad_left) {
-            armMotor.setPower(0);
+            elevatorMotor.setPower(0);
             stopWatchInput.reset();
         } else if (gamepad.dpad_right) {
-            armMotor.setPower(1);
+            elevatorMotor.setPower(1);
             stopWatchInput.reset();
         } else if (gamepad.dpad_up) {
             moveToLevel(targetLevel.next());
@@ -434,6 +430,6 @@ public class Elevator {
         }else if (targetLevel == Level.ONE_FIVE & !theEagleTalon.isClosed()){
             moveToLevel(Level.ONE);
         }
-
+n
     }
 }
