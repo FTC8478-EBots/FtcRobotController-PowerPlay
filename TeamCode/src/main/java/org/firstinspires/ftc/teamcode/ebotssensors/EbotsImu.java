@@ -21,7 +21,7 @@ public class EbotsImu {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     private BNO055IMU imuSensor;
     BNO055IMU.Parameters parameters;
-    private double fieldHeadingWhenInitializedDeg = 0;
+    private double fieldHeadingWhenInitializedDeg = 180;
     private double currentFieldHeading = 0;
     private StopWatch stopWatchReading = new StopWatch();   // time since last hardware read
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

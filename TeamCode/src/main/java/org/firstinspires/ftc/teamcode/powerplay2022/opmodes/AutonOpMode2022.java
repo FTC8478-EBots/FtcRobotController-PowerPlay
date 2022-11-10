@@ -3,31 +3,14 @@ package org.firstinspires.ftc.teamcode.powerplay2022.opmodes;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutinePark;
+
 import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineBlueLeft;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.ebotsenums.BucketState;
-import org.firstinspires.ftc.teamcode.ebotsenums.RobotSide;
 import org.firstinspires.ftc.teamcode.ebotssensors.EbotsImu;
-import org.firstinspires.ftc.teamcode.ebotssensors.EbotsWebcam;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.manips2021.Bucket;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.AutonDrive;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.EbotsAutonState;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.StateCalibratingImu;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.StateConfigureRoutine;
 import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.OpenCVPipelines.ConeDetector;
-import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.StateMoveToHubX2022;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.StateOpenCVObserve;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
-import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.opencvpipelines.FreightDetector;
-import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineCenterPost;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateCloseTalon;
-import org.firstinspires.ftc.teamcode.powerplay2022.states.StateMoveForward;
-import org.firstinspires.ftc.teamcode.powerplay2022.states.StateMoveForwardWithVelocityControl;
-import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous(preselectTeleOp = "EbotsTeleOp2022")
 public class AutonOpMode2022 extends EbotsAutonOpMode {
@@ -39,13 +22,16 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
     private OpenCvCamera camera;
     private boolean stateComplete = false;
     private boolean allStatesCompleted = false;
-    private ConeDetector coneDetector;
+    private ConeDetector leftConeDetector;
+    private ConeDetector rightConeDetector;
 
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize
-        coneDetector = new ConeDetector();
-        coneDetector.startCamera(hardwareMap);
+        leftConeDetector = new ConeDetector();
+        leftConeDetector.startCamera(hardwareMap,"webcamLeft");
+        rightConeDetector = new ConeDetector();
+        rightConeDetector.startCamera(hardwareMap,"webcamRight");
         initAutonOpMode();
         Log.d(logTag, "About to start State Machine...");
         // Execute the pre-match state machine
@@ -57,13 +43,13 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
         }
         //this.itinerary.add(StateMoveForward.class);
         //this.itinerary.addAll(new RoutinePark(coneDetector.getParkingSpace()).getRoutineItinerary());//Somehow got this(;))))
-        this.itinerary.addAll(new RoutineBlueLeft(coneDetector.getParkingSpace()).getRoutineItinerary());
+        this.itinerary.addAll(new RoutineBlueLeft(findParkingSpace()).getRoutineItinerary());
       //  this.itinerary.addAll(new RoutinePark(coneDetector.getParkingSpace()).getRoutineItinerary());//Somehow got this(;))))
         //this.itinerary.addAll(new RoutineCenterPost().getRoutineItinerary());
         //itinerary.add(StateCalibratingImu.class);
         //itinerary.add(StateConfigureRoutine.class);
         //while (true & ! isStarted()) {
-            telemetry.addData("Parking Space",coneDetector.getParkingSpace());
+            telemetry.addData("Parking Space", leftConeDetector.getParkingSpace());
             telemetry.update();
        // }
         waitForStart();
@@ -84,7 +70,18 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
 //        navigatorVuforia.deactivateTargets();
 
     }
-
+    public int findParkingSpace() {
+         if(leftConeDetector.getParkingSpace() == -1) {
+             if (rightConeDetector.getParkingSpace() == -1) {
+                 return 2;
+             } else {
+                 return rightConeDetector.getParkingSpace();
+             }
+         }
+         else {
+             return leftConeDetector.getParkingSpace();
+         }
+    }
     @Override
     public void initAutonOpMode() {
         telemetry.addData("Initializing AutonOpMode ", this.getClass().getSimpleName());
@@ -150,7 +147,7 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
             telemetry.clearAll();
         } else if(!allStatesCompleted){
             allStatesCompleted = true;
-            Log.d(logTag, "Exiting State machine -->No more states in routine!!!");
+            Log.d(logTag, "Exiting State machine --> No more states in routine!!!");
         }
     }
 
@@ -180,35 +177,8 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
 
     //Open up the camera for Freight Detection
     private void startCamera(){
-        freightDetector = new FreightDetector();
 
 
-        //int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        //Log.d(logTag, "cameraMonitorViewId set");
-        EbotsWebcam bucketWebCam = new EbotsWebcam(hardwareMap, "bucketCam", RobotSide.FRONT, 0,-3.25f, 9.0f);
-        WebcamName webcamName = bucketWebCam.getWebcamName();
-        // With live preview
-        camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
-        Log.d(logTag, "camera instantiated");
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                Log.d(logTag, "The camera is now open...");
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-                camera.setPipeline(freightDetector);
-
-            }
-            @Override
-            public void onError(int errorCode)
-            {
-                Log.d(logTag, "There was an error");
-            }
-        });
-        Log.d(logTag, "Camera for Freight Detector Instantiated");
-
-        Log.d(logTag, "Constructor complete");
 
     }
 

@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
+import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.OpenCVPipelines.ConeDetector;
 
 public class Elevator {
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,7 +38,7 @@ public class Elevator {
 
     public enum Level {
         ONE(0),
-        //CONE_1(0),
+        CONE_1(0),
         CONE_2(50),
         CONE_3(100),
         CONE_4(147),
@@ -402,16 +403,36 @@ public class Elevator {
             zeroElevatorHeight();
             stopWatchInput.reset();
         } else if (gamepad.square) {
-            moveToLevel(Level.TWO);
+            if(theEagleTalon.isClosed()) {
+                moveToLevel(Level.TWO);
+            }
+            else{
+                moveToLevel(Level.CONE_3);
+            }
             stopWatchInput.reset();
         } else if (gamepad.cross) {
-            moveToLevel(Level.ONE);
+            if(theEagleTalon.isClosed()) {
+                moveToLevel(Level.ONE);
+            }
+            else{
+                moveToLevel(Level.ONE);
+            }
             stopWatchInput.reset();
         } else if (gamepad.triangle) {
-            moveToLevel(Level.THREE);
+            if(theEagleTalon.isClosed()) {
+                moveToLevel(Level.THREE);
+            }
+            else{
+                moveToLevel(Level.CONE_4);
+            }
             stopWatchInput.reset();
         } else if (gamepad.circle) {
-            moveToLevel(Level.FOUR);
+            if(theEagleTalon.isClosed()) {
+                moveToLevel(Level.FOUR);
+            }
+            else{
+                moveToLevel(Level.CONE_5);
+            }
             stopWatchInput.reset();
         } else if (gamepad.dpad_left) {
             elevatorMotor.setPower(0);
@@ -430,6 +451,9 @@ public class Elevator {
         }else if (targetLevel == Level.ONE_FIVE & !theEagleTalon.isClosed()){
             moveToLevel(Level.ONE);
         }
-n
+        else if(gamepad.left_bumper && (targetLevel == Level.TWO || targetLevel == Level.THREE || targetLevel == Level.FOUR)) {
+            moveToLevel(Level.ONE);
+        }
+
     }
 }
