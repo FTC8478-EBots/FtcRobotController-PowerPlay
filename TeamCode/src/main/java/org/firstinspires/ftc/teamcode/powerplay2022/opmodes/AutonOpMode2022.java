@@ -49,7 +49,7 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
         //itinerary.add(StateCalibratingImu.class);
         //itinerary.add(StateConfigureRoutine.class);
         //while (true & ! isStarted()) {
-            telemetry.addData("Parking Space", leftConeDetector.getParkingSpace());
+            telemetry.addData("Parking Space", findParkingSpace());
             telemetry.update();
        // }
         waitForStart();
@@ -170,7 +170,9 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
 
     private void updateTelemetry(){
         ebotsimu = EbotsImu.getInstance(hardwareMap);
-        telemetry.addData("Current State", currentState.getClass().getSimpleName());
+        if (currentState != null) {
+            telemetry.addData("Current State", currentState.getClass().getSimpleName());
+        }
         telemetry.addData("Current heading", ebotsimu.getCurrentFieldHeadingDeg(false));
         telemetry.update();
     }

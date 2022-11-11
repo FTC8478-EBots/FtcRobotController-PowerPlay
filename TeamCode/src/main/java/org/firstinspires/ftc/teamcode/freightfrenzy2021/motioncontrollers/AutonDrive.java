@@ -563,7 +563,7 @@ public class AutonDrive implements EbotsMotionController {
 
         long translateTimeMillis = (long) ((translateDistance / topTranslationSpeed)*1000);
         long spinTimeMillis = (long) ((rotationAngleRad / topSpinSpeed)*1000);
-        long bufferMillis = 1500L;      //The buffer is a little extra time allotted (maybe should be percentage)
+        long bufferMillis = 2500L;      //The buffer is a little extra time allotted (maybe should be percentage)
 
         //The total calculated time is the travel time and spin time and buffer (plus the soft start duration)
         long calculatedTime = (translateTimeMillis + spinTimeMillis + bufferMillis);

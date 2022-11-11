@@ -24,7 +24,7 @@ public class StateMoveForwardWithVelocityControl extends EbotsAutonStateVelConBa
         Log.d(logTag, "Entering " + this.getClass().getSimpleName() + " constructor");
 
         // Must define
-        motionController.setSpeed(Speed.SLOW);
+        motionController.setSpeed(Speed.MEDIUM);
         boolean isBlue = AllianceSingleton.isBlue();
 
         int allianceSign = (AllianceSingleton.isBlue()) ? 1 : -1;
@@ -48,7 +48,6 @@ public class StateMoveForwardWithVelocityControl extends EbotsAutonStateVelConBa
 
         initAutonState();
         setDriveTarget();
-        moveArmToTargetLevel();
 
         Log.d(logTag, "Constructor complete");
     }
@@ -69,15 +68,5 @@ public class StateMoveForwardWithVelocityControl extends EbotsAutonStateVelConBa
         super.performTransitionalActions();
     }
 
-    private void moveArmToTargetLevel() {
-        BarCodePosition barCodePosition = autonOpMode.getBarCodePosition();
-        Arm.Level targetLevel = Arm.Level.ONE;
-        if (barCodePosition == BarCodePosition.MIDDLE) {
-            targetLevel = Arm.Level.TWO;
-        } else if (barCodePosition == BarCodePosition.RIGHT) {
-            targetLevel = Arm.Level.THREE;
-        }
-        Arm arm = Arm.getInstance(autonOpMode);
-        arm.moveToLevel(targetLevel);
-    }
+
 }

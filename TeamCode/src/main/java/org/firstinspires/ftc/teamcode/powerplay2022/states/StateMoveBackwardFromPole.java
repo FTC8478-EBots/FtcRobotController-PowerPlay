@@ -11,9 +11,8 @@ import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.DriveToEncoderTarget;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.EbotsAutonState;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
-import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.Elevator;
 
-public class StateMoveForward implements EbotsAutonState {
+public class StateMoveBackwardFromPole implements EbotsAutonState {
     private EbotsAutonOpMode autonOpMode;
     private Telemetry telemetry;
 
@@ -21,23 +20,23 @@ public class StateMoveForward implements EbotsAutonState {
     private long stateTimeLimit;
     private StopWatch stopWatch;
     private DriveToEncoderTarget motionController;
-
+    private int clicksPerSquare = 849;
     private String logTag = "EBOTS";
     private boolean firstPass = true;
     private double travelDistance = 4.0;
-    private double clicksPerSquare = 849;
-    public StateMoveForward(EbotsAutonOpMode autonOpMode){
+    public StateMoveBackwardFromPole(EbotsAutonOpMode autonOpMode){
         Log.d(logTag, "Entering StatePushOffWithEncoders constructor");
         this.autonOpMode = autonOpMode;
         this.telemetry = autonOpMode.telemetry;
         motionController = new DriveToEncoderTarget(autonOpMode);
-        double numSquares = 2.6;
+        double numSquares = 0.4;
+        travelDistance = numSquares*2;
         targetClicks = (int) (-clicksPerSquare * numSquares);
-        double maxTranslateSpeed = Speed.SLOW.getMeasuredTranslateSpeed();
+        double maxTranslateSpeed = Speed.FAST.getMeasuredTranslateSpeed();
         stateTimeLimit = (long) (travelDistance / maxTranslateSpeed + 2000);
         stopWatch = new StopWatch();
         int allianceSign = (AllianceSingleton.isBlue()) ? 1 : -1;
-        motionController.setEncoderTarget(targetClicks);
+        motionController.setEncoderTarget(-targetClicks);
         Log.d(logTag, "Constructor complete");
 
     }

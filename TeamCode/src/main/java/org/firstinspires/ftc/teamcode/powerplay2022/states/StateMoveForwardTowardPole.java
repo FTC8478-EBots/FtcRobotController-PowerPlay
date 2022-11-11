@@ -11,9 +11,8 @@ import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.motioncontrollers.DriveToEncoderTarget;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.EbotsAutonState;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
-import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.Elevator;
 
-public class StateMoveForward implements EbotsAutonState {
+public class StateMoveForwardTowardPole implements EbotsAutonState {
     private EbotsAutonOpMode autonOpMode;
     private Telemetry telemetry;
 
@@ -26,12 +25,13 @@ public class StateMoveForward implements EbotsAutonState {
     private boolean firstPass = true;
     private double travelDistance = 4.0;
     private double clicksPerSquare = 849;
-    public StateMoveForward(EbotsAutonOpMode autonOpMode){
+    public StateMoveForwardTowardPole(EbotsAutonOpMode autonOpMode){
         Log.d(logTag, "Entering StatePushOffWithEncoders constructor");
         this.autonOpMode = autonOpMode;
         this.telemetry = autonOpMode.telemetry;
         motionController = new DriveToEncoderTarget(autonOpMode);
-        double numSquares = 2.6;
+        double numSquares = 0.43;
+        travelDistance = numSquares*2;
         targetClicks = (int) (-clicksPerSquare * numSquares);
         double maxTranslateSpeed = Speed.SLOW.getMeasuredTranslateSpeed();
         stateTimeLimit = (long) (travelDistance / maxTranslateSpeed + 2000);

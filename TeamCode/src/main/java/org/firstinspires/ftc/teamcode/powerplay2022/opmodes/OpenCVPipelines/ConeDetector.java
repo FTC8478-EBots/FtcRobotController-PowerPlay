@@ -23,7 +23,11 @@ public class ConeDetector extends OpenCvPipeline {
     public void startCamera(HardwareMap hardwareMap,String webcamName){
         WebcamName coneCamName = hardwareMap.get(WebcamName.class, webcamName);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId","id", hardwareMap.appContext.getPackageName());
-        coneCam1 = OpenCvCameraFactory.getInstance().createWebcam(coneCamName, cameraMonitorViewId);
+        if (webcamName == "webcamRight")
+        coneCam1 = OpenCvCameraFactory.getInstance().createWebcam(coneCamName,cameraMonitorViewId);
+        else
+            coneCam1 = OpenCvCameraFactory.getInstance().createWebcam(coneCamName);
+
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(0.03,822.317,822.317,319.495,242.502);
         coneCam1.setPipeline(aprilTagDetectionPipeline);
         coneCam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {

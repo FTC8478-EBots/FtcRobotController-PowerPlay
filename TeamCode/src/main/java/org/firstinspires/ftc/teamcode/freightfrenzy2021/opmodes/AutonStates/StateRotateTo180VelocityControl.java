@@ -21,10 +21,10 @@ public class StateRotateTo180VelocityControl extends EbotsAutonStateVelConBase{
         Log.d(logTag, "Entering " + this.getClass().getSimpleName() + " constructor");
 
         // Must define
-        motionController.setSpeed(Speed.MEDIUM);
+        motionController.setSpeed(Speed.ROTATE);
         travelDistance = 0.0;
         travelDirectionDeg = 0.0;
-        targetHeadingDeg = 180.0;
+        targetHeadingDeg = -90.0;
 
         initAutonState();
         setDriveTarget();
