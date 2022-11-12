@@ -23,6 +23,7 @@ public class EbotsImu {
     BNO055IMU.Parameters parameters;
     private double fieldHeadingWhenInitializedDeg = 180;
     private double currentFieldHeading = 0;
+    public boolean isInitialized = false;
     private StopWatch stopWatchReading = new StopWatch();   // time since last hardware read
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Constructors
@@ -79,7 +80,7 @@ public class EbotsImu {
         // and named "imu".
         imuSensor = hardwareMap.get(BNO055IMU.class, "imu");
         imuSensor.initialize(parameters);
-
+        isInitialized = true;
     }
 
     public double performHardwareRead(){
@@ -114,6 +115,16 @@ public class EbotsImu {
             updateFieldHeading();
         }
         return ebotsImu.currentFieldHeading;
+    }
+
+    public double getPitch() {
+        if (ebotsImu != null) {
+           return ebotsImu.imuSensor.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
+        }
+        return 0;
+    }
+    public boolean isInitialized(){
+        return isInitialized;
     }
 
 

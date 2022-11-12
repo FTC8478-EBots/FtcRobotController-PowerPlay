@@ -79,6 +79,9 @@ public class EbotsTeleOp2022 extends LinearOpMode {
             this.handleUserInput(gamepad1);
             motionController.handleUserInput(gamepad1);
             elevator.handleUserInput(gamepad2);
+            if(elevator.monitorTilt()) {
+                telemetry.addLine("WARNING TILT");
+            }
             theEagleTalon.handleUserInput(gamepad2);
 
 

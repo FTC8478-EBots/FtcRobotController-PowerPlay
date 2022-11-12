@@ -18,33 +18,37 @@ import org.firstinspires.ftc.teamcode.powerplay2022.states.StateElevatorLow;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateMoveForwardStartAuton;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateRotateLeft45;
 
-public class RoutineBlueLeft extends EbotsAutonRoutine {
+public class RoutineBlueLeftRedLeft extends EbotsAutonRoutine {
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Constructors
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    public RoutineBlueLeft(int parkingSpace){
+    final int numExtraCones = 0;
+    public RoutineBlueLeftRedLeft(int parkingSpace){
+        itinerary.add(StateElevatorCone5.class);
         itinerary.add(StateMoveForwardStartAuton.class);
         itinerary.add(StateRotateRight45.class);
         itinerary.add(StateElevatorHigh.class);
         itinerary.add(StateMoveForwardTowardPole.class);
         itinerary.add(StateOpenTalon.class);
-        itinerary.add(StateElevatorLow.class);
         itinerary.add(StateMoveBackwardFromPole.class);
+        itinerary.add(StateElevatorLow.class);
         //Center of square b blue cones
-        itinerary.add(StateRotateLeft135.class);
-        itinerary.add(StateElevatorCone5.class);
-        itinerary.add(StateMoveForwardBlueCones.class);
-        //itinerary.add(StateStrafeLeft.class);
-        //Grab cone 5
-        itinerary.add(StateCloseTalon.class);
-        itinerary.add(StateElevatorMedium.class);
-        itinerary.add(StateMoveBackwardBlueCones.class);
-        itinerary.add(StateRotateRight135.class);
-        itinerary.add(StateElevatorHigh.class);
-        itinerary.add(StateMoveForwardTowardPole.class);
-        itinerary.add(StateOpenTalon.class);
-        itinerary.add(StateElevatorLow.class);
-        itinerary.add(StateMoveBackwardFromPole.class);
+        for (int i = 0;i<numExtraCones;i++) {
+            itinerary.add(StateRotateLeft135.class);
+            itinerary.add(StateElevatorCone5.class);
+            itinerary.add(StateMoveForwardBlueCones.class);
+            //itinerary.add(StateStrafeLeft.class);
+            //Grab cone 5
+            itinerary.add(StateCloseTalon.class);
+            itinerary.add(StateElevatorMedium.class);
+            itinerary.add(StateMoveBackwardBlueCones.class);
+            itinerary.add(StateRotateRight135.class);
+            itinerary.add(StateElevatorHigh.class);
+            itinerary.add(StateMoveForwardTowardPole.class);
+            itinerary.add(StateOpenTalon.class);
+            itinerary.add(StateMoveBackwardFromPole.class);
+            itinerary.add(StateElevatorLow.class);
+        }
         itinerary.add(StateRotateLeft45.class);
         //Cone dropped successfully
         if(parkingSpace == 1){

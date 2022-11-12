@@ -41,7 +41,9 @@ public class StateCloseTalon implements EbotsAutonState {
 
     @Override
     public boolean shouldExit() {
-      return theEagleTalon.isClosed();
+        telemetry.addData("TalonIsClosed",theEagleTalon.isClosed());
+
+        return theEagleTalon.isClosed();
       //  return true;
     }
 

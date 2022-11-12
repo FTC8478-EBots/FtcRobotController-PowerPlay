@@ -4,16 +4,18 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineBlueLeft;
 import org.firstinspires.ftc.teamcode.ebotssensors.EbotsImu;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.EbotsAutonState;
-import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.OpenCVPipelines.ConeDetector;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
+import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.OpenCVPipelines.ConeDetector;
+import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineBlueRightRedRight;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateCloseTalon;
+import org.firstinspires.ftc.teamcode.powerplay2022.states.StateDetectParkingLeft;
+import org.firstinspires.ftc.teamcode.powerplay2022.states.StateDetectParkingRight;
 import org.openftc.easyopencv.OpenCvCamera;
 
 @Autonomous(preselectTeleOp = "EbotsTeleOp2022")
-public class AutonOpMode2022 extends EbotsAutonOpMode {
+public class AutonOpMode2022Right extends EbotsAutonOpMode {
 
     String logTag = "EBOTS";
     int statesCreated = 0;
@@ -24,14 +26,16 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
     private boolean allStatesCompleted = false;
     private ConeDetector leftConeDetector;
     private ConeDetector rightConeDetector;
-
+    public int parkingSpace = 2;
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize
-        leftConeDetector = new ConeDetector();
+        /*leftConeDetector = new ConeDetector();
         leftConeDetector.startCamera(hardwareMap,"webcamLeft");
         rightConeDetector = new ConeDetector();
         rightConeDetector.startCamera(hardwareMap,"webcamRight");
+
+         */
         initAutonOpMode();
         Log.d(logTag, "About to start State Machine...");
         // Execute the pre-match state machine
@@ -43,13 +47,13 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
         }
         //this.itinerary.add(StateMoveForward.class);
         //this.itinerary.addAll(new RoutinePark(coneDetector.getParkingSpace()).getRoutineItinerary());//Somehow got this(;))))
-        this.itinerary.addAll(new RoutineBlueLeft(findParkingSpace()).getRoutineItinerary());
+        this.itinerary.addAll(new RoutineBlueRightRedRight(parkingSpace).getRoutineItinerary());
       //  this.itinerary.addAll(new RoutinePark(coneDetector.getParkingSpace()).getRoutineItinerary());//Somehow got this(;))))
         //this.itinerary.addAll(new RoutineCenterPost().getRoutineItinerary());
         //itinerary.add(StateCalibratingImu.class);
         //itinerary.add(StateConfigureRoutine.class);
         //while (true & ! isStarted()) {
-            telemetry.addData("Parking Space", findParkingSpace());
+            telemetry.addData("Parking Space", parkingSpace);
             telemetry.update();
        // }
         waitForStart();
@@ -70,18 +74,7 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
 //        navigatorVuforia.deactivateTargets();
 
     }
-    public int findParkingSpace() {
-         if(leftConeDetector.getParkingSpace() == -1) {
-             if (rightConeDetector.getParkingSpace() == -1) {
-                 return 2;
-             } else {
-                 return rightConeDetector.getParkingSpace();
-             }
-         }
-         else {
-             return leftConeDetector.getParkingSpace();
-         }
-    }
+
     @Override
     public void initAutonOpMode() {
         telemetry.addData("Initializing AutonOpMode ", this.getClass().getSimpleName());
@@ -120,6 +113,7 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
 //        itinerary.add(StateUndoCollectTravelWithVelocityControl.class);
 //        itinerary.add(StateDelayTenSeconds.class);
         itinerary.add(StateCloseTalon.class);
+        itinerary.add(StateDetectParkingRight.class);
         telemetry.addLine("Initialization complete!");
         telemetry.update();
     }
@@ -129,6 +123,7 @@ public class AutonOpMode2022 extends EbotsAutonOpMode {
             if (currentState.shouldExit()) {
                 currentState.performTransitionalActions();
                 stateComplete = true;
+
             } else {
                 currentState.performStateActions();
                 updateTelemetry();

@@ -20,6 +20,8 @@ import java.util.ArrayList;
 public class ConeDetector extends OpenCvPipeline {
     OpenCvWebcam coneCam1 = null;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
+    int parkingSpace = -1;
+
     public void startCamera(HardwareMap hardwareMap,String webcamName){
         WebcamName coneCamName = hardwareMap.get(WebcamName.class, webcamName);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId","id", hardwareMap.appContext.getPackageName());
@@ -39,18 +41,25 @@ public class ConeDetector extends OpenCvPipeline {
             }
         });
     }
+    public void stopCamera(){
+        coneCam1.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener() {
+            @Override
+            public void onClose() {
+
+            }
+        });
+    }
     public int getParkingSpace(){
-        int parkingSpace = -1;
        ArrayList <AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
-        if (detections == null )
-        {return parkingSpace;}
-        for (AprilTagDetection aprilTagDetection : detections) {
+       if (detections != null )
+            for (AprilTagDetection aprilTagDetection : detections) {
+        return aprilTagDetection.id;
 
-
-         return aprilTagDetection.id;
+         //parkingSpace = aprilTagDetection.id;
         }
         return parkingSpace;
     }
+
     @Override
     public Mat processFrame(Mat input) {
         return null;

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
+import org.firstinspires.ftc.teamcode.ebotssensors.EbotsImu;
 import org.firstinspires.ftc.teamcode.ebotsutil.StopWatch;
 import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.OpenCVPipelines.ConeDetector;
 
@@ -30,6 +31,7 @@ public class Elevator {
     private Level targetLevel;
     HardwareMap hardwareMap;
     private boolean rotateToCollectWhenReturnToBottom = false;
+    private EbotsImu ebotsImu;
 
     private LinearOpMode opMode;
     private ArmState armState;
@@ -91,6 +93,7 @@ public class Elevator {
         Log.d(logTag, "Instantiating arm...");
         armState = ArmState.NEW;
         this.init(opMode);
+
     }
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -210,6 +213,17 @@ public class Elevator {
         return elevatorInstance;
     }
 
+    public boolean monitorTilt() {
+        telemetry.addData("Pitch: " ,ebotsImu.getPitch());
+        if (ebotsImu.getPitch() >6.0) {
+
+            setTargetLevel(Level.FOUR);
+            return true;
+        }
+        return false;
+
+    }
+
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Instance Methods
@@ -237,6 +251,8 @@ public class Elevator {
             performZeroActions();
         }
         elevatorMotor.setTargetPosition(0);
+        ebotsImu = EbotsImu.getInstance(hardwareMap);
+
 
         if (isAtBottom()) armState = ArmState.INITIALIZED;
 

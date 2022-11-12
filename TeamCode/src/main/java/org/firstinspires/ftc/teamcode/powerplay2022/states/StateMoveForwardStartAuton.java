@@ -33,7 +33,7 @@ public class StateMoveForwardStartAuton implements EbotsAutonState {
         double numSquares = 2.82;
         travelDistance = numSquares*2;
         targetClicks = (int) (-clicksPerSquare * numSquares);
-        double maxTranslateSpeed = Speed.SLOW.getMeasuredTranslateSpeed();
+        double maxTranslateSpeed = Speed.FAST.getMeasuredTranslateSpeed();
         stateTimeLimit = (long) (travelDistance / maxTranslateSpeed + 5000);
         stopWatch = new StopWatch();
         int allianceSign = (AllianceSingleton.isBlue()) ? 1 : -1;

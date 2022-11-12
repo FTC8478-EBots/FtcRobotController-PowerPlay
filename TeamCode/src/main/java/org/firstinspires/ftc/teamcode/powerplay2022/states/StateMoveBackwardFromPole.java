@@ -29,7 +29,7 @@ public class StateMoveBackwardFromPole implements EbotsAutonState {
         this.autonOpMode = autonOpMode;
         this.telemetry = autonOpMode.telemetry;
         motionController = new DriveToEncoderTarget(autonOpMode);
-        double numSquares = 0.4;
+        double numSquares = 0.43;
         travelDistance = numSquares*2;
         targetClicks = (int) (-clicksPerSquare * numSquares);
         double maxTranslateSpeed = Speed.FAST.getMeasuredTranslateSpeed();
