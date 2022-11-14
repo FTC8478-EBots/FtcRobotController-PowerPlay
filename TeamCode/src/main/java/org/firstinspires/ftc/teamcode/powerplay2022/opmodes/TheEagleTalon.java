@@ -180,7 +180,7 @@ public class TheEagleTalon {
             dumpAchieved = false;
         //} else if(bucketState == BucketState.TRAVEL && !(arm.getArmState() == Arm.ArmState.AT_LEVEL_1)) {
             // if requesting to go to collect but not at Level1 then deny bucket movement
-            Log.d("EBOTS", "Bucket tilt to Collect DENIED!!!");
+           // Log.d("EBOTS", "Bucket tilt to Collect DENIED!!!");
         //} else if (bucketState == BucketState.DUMP && dumpAchieved){
             // if state was DUMP and dump achieved them return arm to level 1
           //  bucketState = BucketState.TRAVEL;

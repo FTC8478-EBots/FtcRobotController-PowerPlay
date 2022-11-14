@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.powerplay2022.opmodes;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -137,7 +139,7 @@ public class Elevator {
         double targetPower = 1;
         if (travelingDown) {
             armState = ArmState.MOVING_DOWN;
-            targetPower = 0.5;
+            targetPower = 0.4;
         } else {
             armState = ArmState.MOVING_UP;
         }
@@ -468,7 +470,13 @@ public class Elevator {
             moveToLevel(Level.ONE);
         }
         else if(gamepad.left_bumper && (targetLevel == Level.TWO || targetLevel == Level.THREE || targetLevel == Level.FOUR)) {
-            moveToLevel(Level.ONE);
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    moveToLevel(Level.ONE);
+                }
+            }, 500);
+            //moveToLevel(Level.ONE);
         }
 
     }
