@@ -30,12 +30,15 @@ public class FieldOrientedVelocityControl implements EbotsMotionController {
     double maxWheelVelocity;
     double maxAllowedVelocity;     // between 0-maxWheelVelocity
     double maxAllowedSpinVelocity;     // between 0-maxWheelVelocity to reduce spin power
+    public boolean ignoreController = false;
 
     // The IMU sensor object
     private EbotsImu ebotsImu;
     private double driverFieldHeadingRad;   // Direction of the drive based on alliance side of field
     private Speed speed = Speed.TELEOP;
     private double translateFieldAngleRad;
+
+    Telemetry telemetry;
 
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,6 +51,7 @@ public class FieldOrientedVelocityControl implements EbotsMotionController {
         maxAllowedSpinVelocity = 2500;
 
         ebotsImu = EbotsImu.getInstance(hardwareMap);
+        telemetry = opMode.telemetry;
 
         driverFieldHeadingRad = Math.toRadians(AllianceSingleton.getDriverFieldHeadingDeg());
 
@@ -94,6 +98,8 @@ public class FieldOrientedVelocityControl implements EbotsMotionController {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     @Override
     public void handleUserInput(Gamepad gamepad){
+        if(ignoreController)return;
+        telemetry.addLine("handleUserInput");
 
         //  Robot Drive Angle is interpreted as follows:
         //
@@ -209,10 +215,24 @@ public class FieldOrientedVelocityControl implements EbotsMotionController {
 
     @Override
     public void stop() {
+        telemetry.addData("STOP",0);
+
         for(MecanumWheel mecanumWheel: mecanumWheels){
             mecanumWheel.getMotor().setVelocity(0.0);
         }
     }
+    public void spin(double speed){
+        telemetry.addData("SPIN",speed);
+        for(MecanumWheel mecanumWheel: mecanumWheels) {
+            // to calculate power, must offset translate angle by wheel roller angle
+            double spinVelocity = mecanumWheel.getWheelPosition().getSpinSign() * speed;
+            mecanumWheel.setCalculatedVelocity(spinVelocity);
+
+        }
+        drive();
+    }
+
+
 
     private double getMaxCalculatedVelocityMagnitude(){
         //Loop through the drive motors and return the max abs value of the calculated drive
@@ -232,6 +252,7 @@ public class FieldOrientedVelocityControl implements EbotsMotionController {
     }
 
     public void drive(){
+        telemetry.addLine("drive");
         // set the calculated power to each wheel
         for(MecanumWheel mecanumWheel: mecanumWheels){
             mecanumWheel.energizeWithCalculatedVelocity();
@@ -245,4 +266,13 @@ public class FieldOrientedVelocityControl implements EbotsMotionController {
     }
 
 
+    public void driveForward(double speed) {
+
+        telemetry.addData("driveForward",speed);
+        for(MecanumWheel mecanumWheel: mecanumWheels) {
+            // to calculate power, must offset translate angle by wheel roller angle
+            mecanumWheel.setCalculatedVelocity(speed);
+
+        }
+        drive();}
 }

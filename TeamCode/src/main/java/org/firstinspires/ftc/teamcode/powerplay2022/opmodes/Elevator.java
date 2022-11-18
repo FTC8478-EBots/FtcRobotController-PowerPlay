@@ -295,7 +295,7 @@ public class Elevator {
         boolean exitRequested = opModeExitRequested(duringInit);
 
         while (!isAtBottom() && !isTimedOut && !exitRequested) {
-            elevatorMotor.setPower(-.4);
+            elevatorMotor.setPower(-.2);
             isTimedOut = stopWatchZero.getElapsedTimeMillis() >= timeLimit;
         }
         if (isTimedOut) Log.d(logTag, "Exited movement because timed out");

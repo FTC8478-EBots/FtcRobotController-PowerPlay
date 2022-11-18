@@ -27,7 +27,7 @@ public class StateDetectParkingLeft implements EbotsAutonState {
     private double travelDistance = 4.0;
     private double clicksPerSquare = 849;
     ConeDetector leftConeDetector;
-    ConeDetector rightConeDetector;
+    //ConeDetector rightConeDetector;
     int parkingSpace = -1;
     public StateDetectParkingLeft(EbotsAutonOpMode autonOpMode){
         Log.d(logTag, "Entering StatePushOffWithEncoders constructor");
@@ -35,16 +35,16 @@ public class StateDetectParkingLeft implements EbotsAutonState {
         this.telemetry = autonOpMode.telemetry;
         leftConeDetector = new ConeDetector();
         leftConeDetector.startCamera(autonOpMode.hardwareMap,"webcamLeft");
-        rightConeDetector = new ConeDetector();
-        rightConeDetector.startCamera(autonOpMode.hardwareMap,"webcamRight");
+       // rightConeDetector = new ConeDetector();
+        //rightConeDetector.startCamera(autonOpMode.hardwareMap,"webcamRight");
     }
     public int findParkingSpace() {
         leftSpace = leftConeDetector.getParkingSpace();
-        rightSpace = rightConeDetector.getParkingSpace();
+        //rightSpace = rightConeDetector.getParkingSpace();
         if (leftSpace != -1)
             parkingSpace = leftSpace;
-        if (rightSpace != -1)
-            parkingSpace = rightSpace;
+        //if (rightSpace != -1)
+        //    parkingSpace = rightSpace;
 
      /*   if(leftSpace == -1) {
             if (rightSpace == -1) {
@@ -69,7 +69,7 @@ public class StateDetectParkingLeft implements EbotsAutonState {
     public void performStateActions() {
         findParkingSpace();
         telemetry.addData("Left Cone", leftConeDetector.getParkingSpace());
-        telemetry.addData("Right Cone",rightConeDetector.getParkingSpace());
+      //  telemetry.addData("Right Cone",rightConeDetector.getParkingSpace());
         telemetry.addData("Parking Space",parkingSpace);
 
     }
@@ -80,6 +80,6 @@ public class StateDetectParkingLeft implements EbotsAutonState {
         autonOpMode.parkingSpace = findParkingSpace();
 
         leftConeDetector.stopCamera();
-        rightConeDetector.stopCamera();
+        //rightConeDetector.stopCamera();
     }
 }

@@ -37,7 +37,7 @@ public class EbotsTeleOp2022 extends LinearOpMode {
     private boolean endGameRumbleIssued;
     private String logTag = "EBOTS";
     private EbotsImu ebotsimu;
-
+    private TheEagleEye theEagleEye;
 
 
 
@@ -47,12 +47,14 @@ public class EbotsTeleOp2022 extends LinearOpMode {
         endGameRumbleIssued = false;
         elevator = Elevator.getInstance(this);
         theEagleTalon = TheEagleTalon.getInstance(this);
+        theEagleEye = TheEagleEye.getInstance(this);
         //motor1.setPower(.25);
         ebotsimu = EbotsImu.getInstance(hardwareMap);
         ebotsimu.initEbotsImu(hardwareMap);
         //UtilFuncs.initManips(elevator,null,this);
         elevator.init(this);
         theEagleTalon.init(this);
+        theEagleEye.init(this);
 
 
         motionController = EbotsMotionController.get(FieldOrientedVelocityControl.class, this);
@@ -77,7 +79,10 @@ public class EbotsTeleOp2022 extends LinearOpMode {
 
             rumbleIfEndGame();
             this.handleUserInput(gamepad1);
-            motionController.handleUserInput(gamepad1);
+            if (!theEagleEye.handleUserInput(gamepad1))
+            {
+                motionController.handleUserInput(gamepad1);
+            }
             elevator.handleUserInput(gamepad2);
             if(elevator.monitorTilt()) {
                 telemetry.addLine("WARNING TILT");
