@@ -44,10 +44,12 @@ public abstract class EbotsAutonStateVelConBase implements EbotsAutonState{
     protected boolean rotationOnly = false;
     Accuracy accuracy = Accuracy.STANDARD;
 
+
+
     protected Pose currentPose;
     protected Pose targetPose;
     protected PoseError poseError;
-    protected boolean wasRotationAchieved = false;
+    protected int wasRotationAchieved = 0;
 
     protected int lastAvgClicks = 0;
 
@@ -204,7 +206,7 @@ public abstract class EbotsAutonStateVelConBase implements EbotsAutonState{
         }
 
         // update heading with last imu reading
-        double newHeading = ebotsImu.getCurrentFieldHeadingDeg(false);
+        double newHeading = ebotsImu.getCurrentFieldHeadingDeg(true);
         currentPose.setHeadingDeg(newHeading);
 
         // refresh the pose error
@@ -248,16 +250,16 @@ public abstract class EbotsAutonStateVelConBase implements EbotsAutonState{
     private boolean isTargetRotationSustained(){
         boolean rotationAchieved = isTargetRotationAchieved();
         boolean sustainedVerdict = false;
-        if (rotationAchieved && wasRotationAchieved){
+        if (rotationAchieved && wasRotationAchieved>4){
             // if currently achieved and previously achieved
             sustainedVerdict = true;
-            wasRotationAchieved = true;
+            wasRotationAchieved++;
         } else if(rotationAchieved){
             // is currently achieved but not previously achieved
-            wasRotationAchieved = true;
+            wasRotationAchieved++;
         } else{
             // not currently achieved
-            wasRotationAchieved = false;
+            wasRotationAchieved = 0;
         }
         return sustainedVerdict;
     }

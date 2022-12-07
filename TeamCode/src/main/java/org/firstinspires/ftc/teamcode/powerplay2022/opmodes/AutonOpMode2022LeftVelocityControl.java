@@ -4,20 +4,22 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineBlueLeftRedLeft;
 import org.firstinspires.ftc.teamcode.ebotssensors.EbotsImu;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.EbotsAutonState;
-import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.OpenCVPipelines.ConeDetector;
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
+import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.OpenCVPipelines.ConeDetector;
+import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineBlueLeftRedLeft;
+import org.firstinspires.ftc.teamcode.powerplay2022.routines.RoutineBlueLeftRedLeftVelocityControl;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateCloseTalon;
 import org.firstinspires.ftc.teamcode.powerplay2022.states.StateDetectParkingLeft;
 import org.openftc.easyopencv.OpenCvCamera;
 
 @Autonomous(preselectTeleOp = "EbotsTeleOp2022")
-public class AutonOpMode2022Left extends EbotsAutonOpMode {
+public class AutonOpMode2022LeftVelocityControl extends EbotsAutonOpMode {
 
     String logTag = "EBOTS";
     int statesCreated = 0;
+    private Elevator elevator;
     private EbotsAutonState currentState;
     private EbotsImu ebotsimu;
     private OpenCvCamera camera;
@@ -45,7 +47,7 @@ public class AutonOpMode2022Left extends EbotsAutonOpMode {
         }
         //this.itinerary.add(StateMoveForward.class);
         //this.itinerary.addAll(new RoutinePark(coneDetector.getParkingSpace()).getRoutineItinerary());//Somehow got this(;))))
-        this.itinerary.addAll(new RoutineBlueLeftRedLeft(parkingSpace).getRoutineItinerary());
+        this.itinerary.addAll(new RoutineBlueLeftRedLeftVelocityControl(parkingSpace).getRoutineItinerary());
       //  this.itinerary.addAll(new RoutinePark(coneDetector.getParkingSpace()).getRoutineItinerary());//Somehow got this(;))))
         //this.itinerary.addAll(new RoutineCenterPost().getRoutineItinerary());
         //itinerary.add(StateCalibratingImu.class);
@@ -81,6 +83,9 @@ public class AutonOpMode2022Left extends EbotsAutonOpMode {
 
         EbotsImu ebotsImu = EbotsImu.getInstance(hardwareMap);
         ebotsImu.initEbotsImu(hardwareMap);
+        elevator = Elevator.getInstance(this);
+        elevator.init(this);
+
         // must initialize the following
         // touchSensors for configuration
         // imu and zeroHeadingDeg (start with assumption that starting pose is Blue Carousel)

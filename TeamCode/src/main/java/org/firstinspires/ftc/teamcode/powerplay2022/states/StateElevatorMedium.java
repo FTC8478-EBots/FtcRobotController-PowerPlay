@@ -34,7 +34,8 @@ public class StateElevatorMedium implements EbotsAutonState {
 
     @Override
     public boolean shouldExit() {
-        return elevator.isAtTargetLevel();
+        return true;
+        //return elevator.isAtTargetLevel();
     }
 
     @Override

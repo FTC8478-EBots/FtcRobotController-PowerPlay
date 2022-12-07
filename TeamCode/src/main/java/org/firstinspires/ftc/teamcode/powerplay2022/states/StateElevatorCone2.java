@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.AutonStates.Ebot
 import org.firstinspires.ftc.teamcode.freightfrenzy2021.opmodes.EbotsAutonOpMode;
 import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.Elevator;
 
-public class StateElevatorLow implements EbotsAutonState {
+public class StateElevatorCone2 implements EbotsAutonState {
     private EbotsAutonOpMode autonOpMode;
     private Telemetry telemetry;
 
@@ -22,15 +22,14 @@ public class StateElevatorLow implements EbotsAutonState {
     private double travelDistance = 4.0;
     private double clicksPerSquare = 849;
     private Elevator elevator;
-    public StateElevatorLow(EbotsAutonOpMode autonOpMode){
+    public StateElevatorCone2(EbotsAutonOpMode autonOpMode){
         Log.d(logTag, "Entering StatePushOffWithEncoders constructor");
         this.autonOpMode = autonOpMode;
         this.telemetry = autonOpMode.telemetry;
         Log.d(logTag, "Constructor complete");
         elevator = Elevator.getInstance(autonOpMode);
-        elevator.moveToLevel(Elevator.Level.ONE_FIVE);
+        elevator.moveToLevel(Elevator.Level.CONE_2);
     }
-
 
     @Override
     public boolean shouldExit() {

@@ -21,7 +21,7 @@ public class AllianceSingleton {
         if(alliance == Alliance.BLUE){
             driverFieldHeading = 0;
         } else{
-            driverFieldHeading = 180;
+            driverFieldHeading = 0;
         }
     }
 

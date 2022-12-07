@@ -60,9 +60,8 @@ public class AutonDrive implements EbotsMotionController {
 
     private final String logTag = "EBOTS";
     private int loopCount = 0;
-    private final double clicksPerInch = 48.9;
-    private final double clicksPerDegree = 8.59;
-
+    private final double clicksPerInch = 45.3077;
+    private final double clicksPerDegree = 7.959;
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Constructors
@@ -562,8 +561,9 @@ public class AutonDrive implements EbotsMotionController {
         double topSpinSpeed = speed.getMeasuredAngularSpeedRad();
 
         long translateTimeMillis = (long) ((translateDistance / topTranslationSpeed)*1000);
-        long spinTimeMillis = (long) ((rotationAngleRad / topSpinSpeed)*1000);
-        long bufferMillis = 2500L;      //The buffer is a little extra time allotted (maybe should be percentage)
+        long spinTimeMillis = (long) ((rotationAngleRad / topSpinSpeed)*2000);
+        //TODO: Figure out what values are best here.
+        long bufferMillis = 1500L;      //The buffer is a little extra time allotted (maybe should be percentage)
 
         //The total calculated time is the travel time and spin time and buffer (plus the soft start duration)
         long calculatedTime = (translateTimeMillis + spinTimeMillis + bufferMillis);

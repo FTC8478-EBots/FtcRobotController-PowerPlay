@@ -26,7 +26,6 @@ public class AutonOpMode2022Right extends EbotsAutonOpMode {
     private boolean allStatesCompleted = false;
     private ConeDetector leftConeDetector;
     private ConeDetector rightConeDetector;
-    public int parkingSpace = 2;
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize

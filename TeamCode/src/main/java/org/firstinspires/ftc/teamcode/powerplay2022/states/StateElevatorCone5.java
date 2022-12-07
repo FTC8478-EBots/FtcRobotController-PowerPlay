@@ -34,7 +34,8 @@ public class StateElevatorCone5 implements EbotsAutonState {
 
     @Override
     public boolean shouldExit() {
-        return elevator.isAtTargetLevel();
+        //return elevator.isAtTargetLevel();
+        return true;
     }
 
     @Override

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.OpenCVPipelines.Cone
 import org.firstinspires.ftc.teamcode.powerplay2022.opmodes.TheEagleTalon;
 
 public class StateDetectParkingLeft implements EbotsAutonState {
-    private AutonOpMode2022Left autonOpMode;
+    private EbotsAutonOpMode autonOpMode;
     private Telemetry telemetry;
 
     private int targetClicks;
@@ -31,7 +31,7 @@ public class StateDetectParkingLeft implements EbotsAutonState {
     int parkingSpace = -1;
     public StateDetectParkingLeft(EbotsAutonOpMode autonOpMode){
         Log.d(logTag, "Entering StatePushOffWithEncoders constructor");
-        this.autonOpMode = (AutonOpMode2022Left) autonOpMode;
+        this.autonOpMode = autonOpMode;
         this.telemetry = autonOpMode.telemetry;
         leftConeDetector = new ConeDetector();
         leftConeDetector.startCamera(autonOpMode.hardwareMap,"webcamLeft");

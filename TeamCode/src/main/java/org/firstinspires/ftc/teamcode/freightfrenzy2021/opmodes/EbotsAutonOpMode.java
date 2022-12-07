@@ -26,6 +26,7 @@ public abstract class EbotsAutonOpMode extends LinearOpMode {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
     protected BarCodePosition barCodePosition;
+    public int parkingSpace = 2;
 
     // AllianceSingleton is managed so it can be passed to Teleop for FieldOrientedDrive
     protected EbotsWebcam frontWebcam;
